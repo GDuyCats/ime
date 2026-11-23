@@ -1,0 +1,75 @@
+{
+  "@@locale": "en",
+  "appTitle": "IME",
+  "booksTitle": "Books",
+  "noBooksTitle": "No books yet",
+  "noBooksBody": "Create a book for each thing you manage: a boarding house, a shop, a rental vehicle.",
+  "createBook": "Create book",
+  "editBook": "Edit book",
+  "bookName": "Book name",
+  "bookNameHint": "Boarding house Q7",
+  "bookTemplate": "Template",
+  "templateRental": "Rental",
+  "templateRentalDesc": "Rooms, houses and vehicles with contracts and periodic bills",
+  "templateTrading": "Trading",
+  "templateTradingDesc": "Income and expenses by category, monthly profit",
+  "templateBlank": "Blank",
+  "templateBlankDesc": "Set everything up yourself",
+  "templateLocked": "The template and currency can't be changed after the book is created.",
+  "currency": "Currency",
+  "note": "Note",
+  "save": "Save",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "fieldRequired": "This field is required",
+  "invalidNumber": "Enter a valid number",
+  "deleteBookTitle": "Delete this book?",
+  "deleteBookBody": "The book and everything in it will be removed.",
+  "deleteItemTitle": "Delete this item?",
+  "deleteItemBody": "This item will be removed from the book.",
+  "itemsRental": "Properties",
+  "itemsTrading": "Products",
+  "itemsBlank": "Items",
+  "addItem": "Add",
+  "editItem": "Edit",
+  "noItems": "Nothing here yet. Tap Add to create the first one.",
+  "itemName": "Name",
+  "itemNameHint": "Room 101",
+  "itemKind": "Type",
+  "kindRoom": "Room",
+  "kindHouse": "House",
+  "kindVehicle": "Vehicle",
+  "kindProduct": "Product",
+  "kindOther": "Other",
+  "area": "Area (m²)",
+  "defaultPrice": "Default price",
+  "filterAll": "All",
+  "itemCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
+  "@itemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorLoading": "Something went wrong: {message}",
+  "@errorLoading": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "catRent": "Rent",
+  "catElectricity": "Electricity",
+  "catWater": "Water",
+  "catInternet": "Internet",
+  "catRepairs": "Repairs",
+  "catSales": "Sales",
+  "catIngredients": "Ingredients",
+  "catPackaging": "Packaging",
+  "catPremises": "Premises rent",
+  "catWages": "Wages",
+  "catOtherIncome": "Other income",
+  "catOtherExpense": "Other expense"
+}
