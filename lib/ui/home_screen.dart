@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'books_screen.dart';
 import 'overview_screen.dart';
+import 'people_screen.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
@@ -38,12 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final destinations = [
       _Destination(l10n.navOverview, Icons.space_dashboard_outlined),
       _Destination(l10n.navBooks, Icons.menu_book_outlined),
+      _Destination(l10n.navPeople, Icons.people_outline),
     ];
 
     // A fresh page widget on every switch, so each tab shows current data.
     final Widget page = switch (_index) {
       0 => const OverviewScreen(),
-      _ => const BooksScreen(),
+      1 => const BooksScreen(),
+      _ => const PeopleScreen(),
     };
 
     return Scaffold(

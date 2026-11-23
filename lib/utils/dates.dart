@@ -69,3 +69,6 @@ DueStatus dueStatusFor({
   if (due == day) return const DueStatus(DueState.today);
   return DueStatus(DueState.upcoming, date: due);
 }
+
+/// "dd/MM/yyyy", e.g. 15/11/2026.
+String fullDate(DateTime date) => '${shortDate(date)}/${date.year}';

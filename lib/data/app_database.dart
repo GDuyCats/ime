@@ -15,7 +15,7 @@ class AppDatabase {
   static final AppDatabase instance = AppDatabase._();
 
   static const String _fileName = 'ime.db';
-  static const int _version = 1;
+  static const int _version = 2;
 
   Future<Database>? _opening;
 
@@ -37,6 +37,7 @@ class AppDatabase {
           version: _version,
           onConfigure: _onConfigure,
           onCreate: _onCreate,
+          onUpgrade: _onUpgrade,
         ),
       );
     }
@@ -45,6 +46,7 @@ class AppDatabase {
       version: _version,
       onConfigure: _onConfigure,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -52,9 +54,25 @@ class AppDatabase {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
+  /// A new install builds version 1, then applies every migration, so it
+  /// ends up exactly like an upgraded install.
   static Future<void> _onCreate(Database db, int version) async {
+    await _run(db, schemaV1);
+    await _onUpgrade(db, 1, version);
+  }
+
+  /// Applies each migration newer than [oldVersion], in order.
+  static Future<void> _onUpgrade(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 2) await _run(db, migrationV2);
+  }
+
+  static Future<void> _run(Database db, List<String> statements) async {
     final batch = db.batch();
-    for (final statement in schemaV1) {
+    for (final statement in statements) {
       batch.execute(statement);
     }
     await batch.commit(noResult: true);

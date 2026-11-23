@@ -206,3 +206,24 @@ const List<String> schemaV1 = [
   'CREATE INDEX idx_due_lines_due ON due_lines(due_id)',
   'CREATE INDEX idx_transactions_book_date ON transactions(book_id, date)',
 ];
+
+/// Version 2: per-book defaults for rentals, notice before moving out, and
+/// per-line payment tracking on bills.
+const List<String> migrationV2 = [
+  // 'postpaid': rent for a period is collected at its end (live first,
+  // pay after). 'prepaid': collected at its start.
+  "ALTER TABLE books ADD COLUMN rent_timing TEXT NOT NULL DEFAULT 'postpaid'",
+  // New contracts suggest a deposit of this many months of rent.
+  'ALTER TABLE books ADD COLUMN deposit_months INTEGER NOT NULL DEFAULT 1',
+  // Days of notice a tenant must give before moving out to get the
+  // deposit back.
+  'ALTER TABLE books ADD COLUMN notice_days INTEGER NOT NULL DEFAULT 14',
+  'ALTER TABLE contracts ADD COLUMN notice_days INTEGER NOT NULL DEFAULT 14',
+  'ALTER TABLE contracts ADD COLUMN notice_date TEXT',
+  'ALTER TABLE contracts ADD COLUMN move_out_date TEXT',
+  // Day of month bills fall on, taken from the move-in date. Kept so
+  // short months (e.g. February) do not shift it permanently.
+  'ALTER TABLE contracts ADD COLUMN anchor_day INTEGER NOT NULL DEFAULT 1',
+  'ALTER TABLE due_lines ADD COLUMN paid_amount INTEGER NOT NULL DEFAULT 0',
+  'CREATE INDEX idx_contacts_name ON contacts(name)',
+];

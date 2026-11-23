@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../data/book_repository.dart';
+import '../data/contract_repository.dart';
 import '../data/item_repository.dart';
 import '../data/models.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/money.dart';
 import '../utils/numbers.dart';
 import 'book_form_screen.dart';
+import 'book_settings_screen.dart';
+import 'item_detail_screen.dart';
 import 'item_form_screen.dart';
 import 'labels.dart';
 import 'theme.dart';
@@ -22,13 +25,23 @@ class BookDetailScreen extends StatefulWidget {
   State<BookDetailScreen> createState() => _BookDetailScreenState();
 }
 
-enum _BookAction { edit, delete }
+enum _BookAction { edit, settings, delete }
+
+/// Items of a book plus, for rentals, who rents each one.
+class _BookItems {
+  const _BookItems(this.items, this.tenants);
+
+  final List<Item> items;
+
+  /// Tenant name by item id; missing means vacant.
+  final Map<String, String> tenants;
+}
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
   final BookRepository _books = BookRepository();
   final ItemRepository _items = ItemRepository();
   late Book _book;
-  late Future<List<Item>> _future;
+  late Future<_BookItems> _future;
 
   /// Null means "show every kind".
   ItemKind? _filter;
@@ -37,13 +50,44 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   void initState() {
     super.initState();
     _book = widget.book;
-    _future = _items.listItems(_book.id);
+    _future = _load();
+  }
+
+  bool get _isRental => _book.template == BookTemplate.rental;
+
+  Future<_BookItems> _load() async {
+    final items = await _items.listItems(_book.id);
+    final tenants = _isRental
+        ? await ContractRepository().tenantNamesForBook(_book.id)
+        : const <String, String>{};
+    return _BookItems(items, tenants);
   }
 
   void _reload() {
     setState(() {
-      _future = _items.listItems(_book.id);
+      _future = _load();
     });
+  }
+
+  Future<void> _openSettings() async {
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => BookSettingsScreen(book: _book)),
+    );
+    if (saved != true) return;
+    final fresh = await _books.getBook(_book.id);
+    if (!mounted || fresh == null) return;
+    setState(() => _book = fresh);
+  }
+
+  /// Rentals open the item page (contract); other books edit the item.
+  Future<void> _openItem(Item item) async {
+    if (!_isRental) return _openItemForm(item);
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => ItemDetailScreen(book: _book, item: item),
+      ),
+    );
+    if (mounted) _reload();
   }
 
   Future<void> _editBook() async {
@@ -78,8 +122,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     if (saved == true && mounted) _reload();
   }
 
-  String _itemSubtitle(AppLocalizations l10n, Item item) {
-    final parts = <String>[itemKindLabel(l10n, item.kind)];
+  String _itemSubtitle(AppLocalizations l10n, Item item, String? tenant) {
+    final parts = <String>[
+      if (_isRental) tenant ?? l10n.roomVacant,
+      itemKindLabel(l10n, item.kind),
+    ];
     final area = item.areaM2;
     if (area != null) parts.add('${formatArea(area)} m²');
     return parts.join(' · ');
@@ -101,25 +148,33 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               switch (action) {
                 case _BookAction.edit:
                   _editBook();
+                case _BookAction.settings:
+                  _openSettings();
                 case _BookAction.delete:
                   _deleteBook();
               }
             },
             itemBuilder: (_) => [
               PopupMenuItem(value: _BookAction.edit, child: Text(l10n.editBook)),
+              if (_isRental)
+                PopupMenuItem(
+                  value: _BookAction.settings,
+                  child: Text(l10n.bookSettings),
+                ),
               PopupMenuItem(value: _BookAction.delete, child: Text(l10n.delete)),
             ],
           ),
         ],
       ),
-      body: FutureBuilder<List<Item>>(
+      body: FutureBuilder<_BookItems>(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) return ErrorState(error: snapshot.error);
-          final items = snapshot.data ?? const <Item>[];
+          final data = snapshot.requireData;
+          final items = data.items;
           if (items.isEmpty) {
             return Center(
               child: EmptyState(
@@ -171,12 +226,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ListRow(
                         leading: Icon(itemKindIcon(item.kind)),
                         title: item.name,
-                        subtitle: _itemSubtitle(l10n, item),
+                        subtitle: _itemSubtitle(l10n, item, data.tenants[item.id]),
                         trailing: _PriceText(
                           price: item.defaultPrice,
                           currency: _book.currency,
                         ),
-                        onTap: () => _openItemForm(item),
+                        onTap: () => _openItem(item),
                       ),
                   ],
                 ),

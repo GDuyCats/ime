@@ -259,4 +259,238 @@ class AppLocalizationsEn extends AppLocalizations {
   String badgeDue(String date) {
     return 'Due $date';
   }
+
+  @override
+  String get bookSettings => 'Book settings';
+
+  @override
+  String get rentTimingLabel => 'Rent collection';
+
+  @override
+  String get rentPostpaid => 'After the period';
+
+  @override
+  String get rentPostpaidDesc =>
+      'Tenant lives first and pays at the end of each period.';
+
+  @override
+  String get rentPrepaid => 'Before the period';
+
+  @override
+  String get rentPrepaidDesc => 'Tenant pays at the start of each period.';
+
+  @override
+  String get depositMonthsLabel => 'Default deposit (months of rent)';
+
+  @override
+  String get noticeDaysLabel => 'Days of notice before moving out';
+
+  @override
+  String get defaultChargesTitle => 'Default charges';
+
+  @override
+  String get defaultChargesHint =>
+      'New contracts start with these charges. Each room can still change them.';
+
+  @override
+  String get noCharges => 'No extra charges yet.';
+
+  @override
+  String get addCharge => 'Add charge';
+
+  @override
+  String get editCharge => 'Edit charge';
+
+  @override
+  String get chargeName => 'Name';
+
+  @override
+  String get chargeNameHint => 'Electricity';
+
+  @override
+  String get calcType => 'Calculated by';
+
+  @override
+  String get calcMeter => 'Meter reading';
+
+  @override
+  String get calcPerPerson => 'Per person';
+
+  @override
+  String get calcFixed => 'Fixed amount';
+
+  @override
+  String get calcManual => 'Typed each period';
+
+  @override
+  String get calcManualShort => 'Typed each period';
+
+  @override
+  String get priceMeter => 'Price per unit';
+
+  @override
+  String get pricePerPerson => 'Price per person';
+
+  @override
+  String get priceFixed => 'Amount per period';
+
+  @override
+  String unitMeter(String price) {
+    return '$price/unit';
+  }
+
+  @override
+  String unitPerPerson(String price) {
+    return '$price/person';
+  }
+
+  @override
+  String unitFixed(String price) {
+    return '$price/period';
+  }
+
+  @override
+  String get meterStart => 'Starting reading';
+
+  @override
+  String meterReadingValue(String reading) {
+    return 'Starts at $reading';
+  }
+
+  @override
+  String get removeCharge => 'Remove';
+
+  @override
+  String get mustBeWholeNumber => 'Enter a whole number';
+
+  @override
+  String get currentContract => 'Contract';
+
+  @override
+  String get roomVacant => 'Vacant';
+
+  @override
+  String get roomVacantBody => 'Nobody rents this right now.';
+
+  @override
+  String get rentOut => 'Rent out';
+
+  @override
+  String get editContract => 'Edit contract';
+
+  @override
+  String get tenant => 'Tenant';
+
+  @override
+  String get rentAmount => 'Rent';
+
+  @override
+  String get cycle => 'Billing cycle';
+
+  @override
+  String get cycleDay => 'Daily';
+
+  @override
+  String get cycleWeek => 'Weekly';
+
+  @override
+  String get cycleMonth => 'Monthly';
+
+  @override
+  String rentPerDay(String amount) {
+    return '$amount/day';
+  }
+
+  @override
+  String rentPerWeek(String amount) {
+    return '$amount/week';
+  }
+
+  @override
+  String rentPerMonth(String amount) {
+    return '$amount/month';
+  }
+
+  @override
+  String get moveInDate => 'Move-in date';
+
+  @override
+  String get nextDue => 'Next bill';
+
+  @override
+  String firstDueInfo(String date) {
+    return 'First bill: $date';
+  }
+
+  @override
+  String get occupants => 'Occupants';
+
+  @override
+  String get deposit => 'Deposit';
+
+  @override
+  String get depositHeld => 'held';
+
+  @override
+  String get depositNone => 'No deposit';
+
+  @override
+  String get extraCharges => 'Extra charges';
+
+  @override
+  String get contractLocked =>
+      'The move-in date and billing cycle can\'t change after the contract is created.';
+
+  @override
+  String get tenantExisting => 'Saved person';
+
+  @override
+  String get tenantNew => 'New person';
+
+  @override
+  String get chooseTenant => 'Choose a tenant';
+
+  @override
+  String get noContactsYet => 'Nobody is saved yet. Choose New person.';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get idNumber => 'ID number';
+
+  @override
+  String get personName => 'Full name';
+
+  @override
+  String get personNameHint => 'Nguyen Van A';
+
+  @override
+  String get navPeople => 'People';
+
+  @override
+  String get addPerson => 'Add person';
+
+  @override
+  String get editPerson => 'Edit person';
+
+  @override
+  String get noPeopleTitle => 'No one yet';
+
+  @override
+  String get noPeopleBody =>
+      'Tenants show up here when you rent out a room. You can also add people yourself.';
+
+  @override
+  String get notRenting => 'Not renting';
+
+  @override
+  String get cannotDeleteRenting =>
+      'This person still rents something. End the contract before deleting.';
+
+  @override
+  String get deletePersonTitle => 'Delete this person?';
+
+  @override
+  String get deletePersonBody => 'This person will be removed from the list.';
 }

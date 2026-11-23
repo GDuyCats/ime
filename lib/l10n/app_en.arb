@@ -118,5 +118,132 @@
         "type": "String"
       }
     }
-  }
+  },
+  "bookSettings": "Book settings",
+  "rentTimingLabel": "Rent collection",
+  "rentPostpaid": "After the period",
+  "rentPostpaidDesc": "Tenant lives first and pays at the end of each period.",
+  "rentPrepaid": "Before the period",
+  "rentPrepaidDesc": "Tenant pays at the start of each period.",
+  "depositMonthsLabel": "Default deposit (months of rent)",
+  "noticeDaysLabel": "Days of notice before moving out",
+  "defaultChargesTitle": "Default charges",
+  "defaultChargesHint": "New contracts start with these charges. Each room can still change them.",
+  "noCharges": "No extra charges yet.",
+  "addCharge": "Add charge",
+  "editCharge": "Edit charge",
+  "chargeName": "Name",
+  "chargeNameHint": "Electricity",
+  "calcType": "Calculated by",
+  "calcMeter": "Meter reading",
+  "calcPerPerson": "Per person",
+  "calcFixed": "Fixed amount",
+  "calcManual": "Typed each period",
+  "calcManualShort": "Typed each period",
+  "priceMeter": "Price per unit",
+  "pricePerPerson": "Price per person",
+  "priceFixed": "Amount per period",
+  "unitMeter": "{price}/unit",
+  "@unitMeter": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "unitPerPerson": "{price}/person",
+  "@unitPerPerson": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "unitFixed": "{price}/period",
+  "@unitFixed": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "meterStart": "Starting reading",
+  "meterReadingValue": "Starts at {reading}",
+  "@meterReadingValue": {
+    "placeholders": {
+      "reading": {
+        "type": "String"
+      }
+    }
+  },
+  "removeCharge": "Remove",
+  "mustBeWholeNumber": "Enter a whole number",
+  "currentContract": "Contract",
+  "roomVacant": "Vacant",
+  "roomVacantBody": "Nobody rents this right now.",
+  "rentOut": "Rent out",
+  "editContract": "Edit contract",
+  "tenant": "Tenant",
+  "rentAmount": "Rent",
+  "cycle": "Billing cycle",
+  "cycleDay": "Daily",
+  "cycleWeek": "Weekly",
+  "cycleMonth": "Monthly",
+  "rentPerDay": "{amount}/day",
+  "@rentPerDay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rentPerWeek": "{amount}/week",
+  "@rentPerWeek": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rentPerMonth": "{amount}/month",
+  "@rentPerMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "moveInDate": "Move-in date",
+  "nextDue": "Next bill",
+  "firstDueInfo": "First bill: {date}",
+  "@firstDueInfo": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "occupants": "Occupants",
+  "deposit": "Deposit",
+  "depositHeld": "held",
+  "depositNone": "No deposit",
+  "extraCharges": "Extra charges",
+  "contractLocked": "The move-in date and billing cycle can't change after the contract is created.",
+  "tenantExisting": "Saved person",
+  "tenantNew": "New person",
+  "chooseTenant": "Choose a tenant",
+  "noContactsYet": "Nobody is saved yet. Choose New person.",
+  "phone": "Phone",
+  "idNumber": "ID number",
+  "personName": "Full name",
+  "personNameHint": "Nguyen Van A",
+  "navPeople": "People",
+  "addPerson": "Add person",
+  "editPerson": "Edit person",
+  "noPeopleTitle": "No one yet",
+  "noPeopleBody": "Tenants show up here when you rent out a room. You can also add people yourself.",
+  "notRenting": "Not renting",
+  "cannotDeleteRenting": "This person still rents something. End the contract before deleting.",
+  "deletePersonTitle": "Delete this person?",
+  "deletePersonBody": "This person will be removed from the list."
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/models.dart';
 import '../l10n/app_localizations.dart';
+import '../utils/money.dart';
 
 String templateLabel(AppLocalizations l10n, BookTemplate template) {
   return switch (template) {
@@ -61,5 +62,61 @@ IconData itemKindIcon(ItemKind kind) {
     ItemKind.vehicle => Icons.two_wheeler,
     ItemKind.product => Icons.inventory_2_outlined,
     ItemKind.other => Icons.category_outlined,
+  };
+}
+
+String calcTypeLabel(AppLocalizations l10n, ChargeCalcType type) {
+  return switch (type) {
+    ChargeCalcType.meter => l10n.calcMeter,
+    ChargeCalcType.perPerson => l10n.calcPerPerson,
+    ChargeCalcType.fixed => l10n.calcFixed,
+    ChargeCalcType.manual => l10n.calcManual,
+  };
+}
+
+/// Label of the price field, which depends on how the charge is counted.
+String chargePriceLabel(AppLocalizations l10n, ChargeCalcType type) {
+  return switch (type) {
+    ChargeCalcType.meter => l10n.priceMeter,
+    ChargeCalcType.perPerson => l10n.pricePerPerson,
+    ChargeCalcType.fixed || ChargeCalcType.manual => l10n.priceFixed,
+  };
+}
+
+/// One-line summary of a charge, e.g. "3.500 ₫/unit".
+String chargeSummary(
+  AppLocalizations l10n,
+  ChargeInput charge,
+  String currency,
+) {
+  final price = formatMoney(charge.unitPrice, currency);
+  return switch (charge.calcType) {
+    ChargeCalcType.meter => l10n.unitMeter(price),
+    ChargeCalcType.perPerson => l10n.unitPerPerson(price),
+    ChargeCalcType.fixed => l10n.unitFixed(price),
+    ChargeCalcType.manual => l10n.calcManualShort,
+  };
+}
+
+String cycleLabel(AppLocalizations l10n, BillingCycle cycle) {
+  return switch (cycle) {
+    BillingCycle.day => l10n.cycleDay,
+    BillingCycle.week => l10n.cycleWeek,
+    BillingCycle.month => l10n.cycleMonth,
+  };
+}
+
+/// Rent with its period, e.g. "3.000.000 ₫/month".
+String rentPerCycle(
+  AppLocalizations l10n,
+  int amount,
+  String currency,
+  BillingCycle cycle,
+) {
+  final money = formatMoney(amount, currency);
+  return switch (cycle) {
+    BillingCycle.day => l10n.rentPerDay(money),
+    BillingCycle.week => l10n.rentPerWeek(money),
+    BillingCycle.month => l10n.rentPerMonth(money),
   };
 }

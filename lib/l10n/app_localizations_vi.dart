@@ -256,4 +256,237 @@ class AppLocalizationsVi extends AppLocalizations {
   String badgeDue(String date) {
     return 'Hạn $date';
   }
+
+  @override
+  String get bookSettings => 'Cài đặt sổ';
+
+  @override
+  String get rentTimingLabel => 'Thu tiền phòng';
+
+  @override
+  String get rentPostpaid => 'Trả sau';
+
+  @override
+  String get rentPostpaidDesc => 'Khách ở trước, hết kỳ mới đóng tiền.';
+
+  @override
+  String get rentPrepaid => 'Trả trước';
+
+  @override
+  String get rentPrepaidDesc => 'Khách đóng tiền ngay đầu mỗi kỳ.';
+
+  @override
+  String get depositMonthsLabel => 'Tiền cọc mặc định (số tháng tiền phòng)';
+
+  @override
+  String get noticeDaysLabel => 'Số ngày phải báo trước khi trả phòng';
+
+  @override
+  String get defaultChargesTitle => 'Khoản phụ mặc định';
+
+  @override
+  String get defaultChargesHint =>
+      'Hợp đồng mới sẽ tự lấy các khoản này, từng phòng vẫn sửa riêng được.';
+
+  @override
+  String get noCharges => 'Chưa có khoản phụ nào.';
+
+  @override
+  String get addCharge => 'Thêm khoản';
+
+  @override
+  String get editCharge => 'Sửa khoản';
+
+  @override
+  String get chargeName => 'Tên khoản';
+
+  @override
+  String get chargeNameHint => 'Điện';
+
+  @override
+  String get calcType => 'Cách tính';
+
+  @override
+  String get calcMeter => 'Theo chỉ số';
+
+  @override
+  String get calcPerPerson => 'Theo đầu người';
+
+  @override
+  String get calcFixed => 'Cố định';
+
+  @override
+  String get calcManual => 'Nhập tay mỗi kỳ';
+
+  @override
+  String get calcManualShort => 'Nhập mỗi kỳ';
+
+  @override
+  String get priceMeter => 'Giá mỗi số';
+
+  @override
+  String get pricePerPerson => 'Giá mỗi người';
+
+  @override
+  String get priceFixed => 'Số tiền mỗi kỳ';
+
+  @override
+  String unitMeter(String price) {
+    return '$price/số';
+  }
+
+  @override
+  String unitPerPerson(String price) {
+    return '$price/người';
+  }
+
+  @override
+  String unitFixed(String price) {
+    return '$price/kỳ';
+  }
+
+  @override
+  String get meterStart => 'Số đầu kỳ';
+
+  @override
+  String meterReadingValue(String reading) {
+    return 'Số đầu $reading';
+  }
+
+  @override
+  String get removeCharge => 'Bỏ khoản này';
+
+  @override
+  String get mustBeWholeNumber => 'Nhập số nguyên';
+
+  @override
+  String get currentContract => 'Hợp đồng';
+
+  @override
+  String get roomVacant => 'Đang trống';
+
+  @override
+  String get roomVacantBody => 'Hiện chưa có ai thuê.';
+
+  @override
+  String get rentOut => 'Cho thuê';
+
+  @override
+  String get editContract => 'Sửa hợp đồng';
+
+  @override
+  String get tenant => 'Người thuê';
+
+  @override
+  String get rentAmount => 'Giá thuê';
+
+  @override
+  String get cycle => 'Chu kỳ thu';
+
+  @override
+  String get cycleDay => 'Theo ngày';
+
+  @override
+  String get cycleWeek => 'Theo tuần';
+
+  @override
+  String get cycleMonth => 'Theo tháng';
+
+  @override
+  String rentPerDay(String amount) {
+    return '$amount/ngày';
+  }
+
+  @override
+  String rentPerWeek(String amount) {
+    return '$amount/tuần';
+  }
+
+  @override
+  String rentPerMonth(String amount) {
+    return '$amount/tháng';
+  }
+
+  @override
+  String get moveInDate => 'Ngày vào';
+
+  @override
+  String get nextDue => 'Kỳ thu tới';
+
+  @override
+  String firstDueInfo(String date) {
+    return 'Kỳ thu đầu tiên: $date';
+  }
+
+  @override
+  String get occupants => 'Số người ở';
+
+  @override
+  String get deposit => 'Tiền cọc';
+
+  @override
+  String get depositHeld => 'đang giữ';
+
+  @override
+  String get depositNone => 'Không có cọc';
+
+  @override
+  String get extraCharges => 'Khoản phụ';
+
+  @override
+  String get contractLocked =>
+      'Không đổi được ngày vào và chu kỳ thu sau khi đã tạo hợp đồng.';
+
+  @override
+  String get tenantExisting => 'Người có sẵn';
+
+  @override
+  String get tenantNew => 'Người mới';
+
+  @override
+  String get chooseTenant => 'Chọn người thuê';
+
+  @override
+  String get noContactsYet => 'Chưa có ai trong danh sách, hãy chọn Người mới.';
+
+  @override
+  String get phone => 'Số điện thoại';
+
+  @override
+  String get idNumber => 'Số CCCD';
+
+  @override
+  String get personName => 'Họ tên';
+
+  @override
+  String get personNameHint => 'Nguyễn Văn A';
+
+  @override
+  String get navPeople => 'Người';
+
+  @override
+  String get addPerson => 'Thêm người';
+
+  @override
+  String get editPerson => 'Sửa thông tin';
+
+  @override
+  String get noPeopleTitle => 'Chưa có ai';
+
+  @override
+  String get noPeopleBody =>
+      'Người thuê sẽ hiện ở đây khi bạn cho thuê phòng. Bạn cũng có thể tự thêm người.';
+
+  @override
+  String get notRenting => 'Không thuê gì';
+
+  @override
+  String get cannotDeleteRenting =>
+      'Người này đang thuê, hãy kết thúc hợp đồng trước khi xóa.';
+
+  @override
+  String get deletePersonTitle => 'Xóa người này?';
+
+  @override
+  String get deletePersonBody => 'Người này sẽ bị xóa khỏi danh sách.';
 }

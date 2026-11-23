@@ -1,7 +1,9 @@
-// Unit tests for the number and money helpers.
+// Unit tests for money, number, date and billing helpers.
 // (Kept in widget_test.dart so `flutter create .` does not add its own
 // default test that refers to a counter app.)
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ime/data/models.dart';
+import 'package:ime/utils/billing.dart';
 import 'package:ime/utils/dates.dart';
 import 'package:ime/utils/money.dart';
 import 'package:ime/utils/numbers.dart';
@@ -93,6 +95,50 @@ void main() {
       expect(isoDate(date), '2026-01-05');
       expect(parseIsoDate('2026-01-05'), date);
       expect(parseIsoDate('bad'), isNull);
+    });
+  });
+
+  group('billing dates', () {
+    test('monthly bills keep the move-in day across short months', () {
+      final feb = addCycle(DateTime(2027, 1, 31), BillingCycle.month, 31);
+      expect(feb, DateTime(2027, 2, 28));
+      final mar = addCycle(feb, BillingCycle.month, 31);
+      expect(mar, DateTime(2027, 3, 31));
+    });
+
+    test('rolls over the year end', () {
+      expect(
+        addCycle(DateTime(2026, 12, 15), BillingCycle.month, 15),
+        DateTime(2027, 1, 15),
+      );
+    });
+
+    test('weekly and daily cycles', () {
+      expect(
+        addCycle(DateTime(2026, 11, 28), BillingCycle.week, 28),
+        DateTime(2026, 12, 5),
+      );
+      expect(
+        addCycle(DateTime(2026, 11, 30), BillingCycle.day, 30),
+        DateTime(2026, 12, 1),
+      );
+    });
+
+    test('postpaid rent is first billed one cycle after moving in', () {
+      final start = DateTime(2026, 11, 15);
+      expect(
+        firstDueDate(start, BillingCycle.month, RentTiming.postpaid),
+        DateTime(2026, 12, 15),
+      );
+      expect(
+        firstDueDate(start, BillingCycle.month, RentTiming.prepaid),
+        start,
+      );
+    });
+
+    test('suggested deposit is months of rent', () {
+      expect(suggestedDeposit(3000000, 1), 3000000);
+      expect(suggestedDeposit(3000000, 2), 6000000);
     });
   });
 }

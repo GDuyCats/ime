@@ -541,6 +541,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Due {date}'**
   String badgeDue(String date);
+
+  /// No description provided for @bookSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Book settings'**
+  String get bookSettings;
+
+  /// No description provided for @rentTimingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent collection'**
+  String get rentTimingLabel;
+
+  /// No description provided for @rentPostpaid.
+  ///
+  /// In en, this message translates to:
+  /// **'After the period'**
+  String get rentPostpaid;
+
+  /// No description provided for @rentPostpaidDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant lives first and pays at the end of each period.'**
+  String get rentPostpaidDesc;
+
+  /// No description provided for @rentPrepaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Before the period'**
+  String get rentPrepaid;
+
+  /// No description provided for @rentPrepaidDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant pays at the start of each period.'**
+  String get rentPrepaidDesc;
+
+  /// No description provided for @depositMonthsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default deposit (months of rent)'**
+  String get depositMonthsLabel;
+
+  /// No description provided for @noticeDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Days of notice before moving out'**
+  String get noticeDaysLabel;
+
+  /// No description provided for @defaultChargesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Default charges'**
+  String get defaultChargesTitle;
+
+  /// No description provided for @defaultChargesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'New contracts start with these charges. Each room can still change them.'**
+  String get defaultChargesHint;
+
+  /// No description provided for @noCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'No extra charges yet.'**
+  String get noCharges;
+
+  /// No description provided for @addCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Add charge'**
+  String get addCharge;
+
+  /// No description provided for @editCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit charge'**
+  String get editCharge;
+
+  /// No description provided for @chargeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get chargeName;
+
+  /// No description provided for @chargeNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Electricity'**
+  String get chargeNameHint;
+
+  /// No description provided for @calcType.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculated by'**
+  String get calcType;
+
+  /// No description provided for @calcMeter.
+  ///
+  /// In en, this message translates to:
+  /// **'Meter reading'**
+  String get calcMeter;
+
+  /// No description provided for @calcPerPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Per person'**
+  String get calcPerPerson;
+
+  /// No description provided for @calcFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed amount'**
+  String get calcFixed;
+
+  /// No description provided for @calcManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Typed each period'**
+  String get calcManual;
+
+  /// No description provided for @calcManualShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Typed each period'**
+  String get calcManualShort;
+
+  /// No description provided for @priceMeter.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per unit'**
+  String get priceMeter;
+
+  /// No description provided for @pricePerPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Price per person'**
+  String get pricePerPerson;
+
+  /// No description provided for @priceFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount per period'**
+  String get priceFixed;
+
+  /// No description provided for @unitMeter.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/unit'**
+  String unitMeter(String price);
+
+  /// No description provided for @unitPerPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/person'**
+  String unitPerPerson(String price);
+
+  /// No description provided for @unitFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/period'**
+  String unitFixed(String price);
+
+  /// No description provided for @meterStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting reading'**
+  String get meterStart;
+
+  /// No description provided for @meterReadingValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at {reading}'**
+  String meterReadingValue(String reading);
+
+  /// No description provided for @removeCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeCharge;
+
+  /// No description provided for @mustBeWholeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a whole number'**
+  String get mustBeWholeNumber;
+
+  /// No description provided for @currentContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Contract'**
+  String get currentContract;
+
+  /// No description provided for @roomVacant.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacant'**
+  String get roomVacant;
+
+  /// No description provided for @roomVacantBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody rents this right now.'**
+  String get roomVacantBody;
+
+  /// No description provided for @rentOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent out'**
+  String get rentOut;
+
+  /// No description provided for @editContract.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit contract'**
+  String get editContract;
+
+  /// No description provided for @tenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenant'**
+  String get tenant;
+
+  /// No description provided for @rentAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent'**
+  String get rentAmount;
+
+  /// No description provided for @cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Billing cycle'**
+  String get cycle;
+
+  /// No description provided for @cycleDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get cycleDay;
+
+  /// No description provided for @cycleWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get cycleWeek;
+
+  /// No description provided for @cycleMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get cycleMonth;
+
+  /// No description provided for @rentPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount}/day'**
+  String rentPerDay(String amount);
+
+  /// No description provided for @rentPerWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount}/week'**
+  String rentPerWeek(String amount);
+
+  /// No description provided for @rentPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount}/month'**
+  String rentPerMonth(String amount);
+
+  /// No description provided for @moveInDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Move-in date'**
+  String get moveInDate;
+
+  /// No description provided for @nextDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Next bill'**
+  String get nextDue;
+
+  /// No description provided for @firstDueInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'First bill: {date}'**
+  String firstDueInfo(String date);
+
+  /// No description provided for @occupants.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupants'**
+  String get occupants;
+
+  /// No description provided for @deposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit'**
+  String get deposit;
+
+  /// No description provided for @depositHeld.
+  ///
+  /// In en, this message translates to:
+  /// **'held'**
+  String get depositHeld;
+
+  /// No description provided for @depositNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No deposit'**
+  String get depositNone;
+
+  /// No description provided for @extraCharges.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra charges'**
+  String get extraCharges;
+
+  /// No description provided for @contractLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'The move-in date and billing cycle can\'t change after the contract is created.'**
+  String get contractLocked;
+
+  /// No description provided for @tenantExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved person'**
+  String get tenantExisting;
+
+  /// No description provided for @tenantNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New person'**
+  String get tenantNew;
+
+  /// No description provided for @chooseTenant.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a tenant'**
+  String get chooseTenant;
+
+  /// No description provided for @noContactsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody is saved yet. Choose New person.'**
+  String get noContactsYet;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @idNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'ID number'**
+  String get idNumber;
+
+  /// No description provided for @personName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get personName;
+
+  /// No description provided for @personNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Nguyen Van A'**
+  String get personNameHint;
+
+  /// No description provided for @navPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get navPeople;
+
+  /// No description provided for @addPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Add person'**
+  String get addPerson;
+
+  /// No description provided for @editPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit person'**
+  String get editPerson;
+
+  /// No description provided for @noPeopleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No one yet'**
+  String get noPeopleTitle;
+
+  /// No description provided for @noPeopleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tenants show up here when you rent out a room. You can also add people yourself.'**
+  String get noPeopleBody;
+
+  /// No description provided for @notRenting.
+  ///
+  /// In en, this message translates to:
+  /// **'Not renting'**
+  String get notRenting;
+
+  /// No description provided for @cannotDeleteRenting.
+  ///
+  /// In en, this message translates to:
+  /// **'This person still rents something. End the contract before deleting.'**
+  String get cannotDeleteRenting;
+
+  /// No description provided for @deletePersonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this person?'**
+  String get deletePersonTitle;
+
+  /// No description provided for @deletePersonBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This person will be removed from the list.'**
+  String get deletePersonBody;
 }
 
 class _AppLocalizationsDelegate
