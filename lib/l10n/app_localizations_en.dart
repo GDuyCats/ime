@@ -196,4 +196,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catOtherExpense => 'Other expense';
+
+  @override
+  String get navOverview => 'Overview';
+
+  @override
+  String get navBooks => 'Books';
+
+  @override
+  String monthTitle(int month, int year) {
+    return 'Month $month/$year';
+  }
+
+  @override
+  String get statIncome => 'Received';
+
+  @override
+  String get statExpense => 'Spent';
+
+  @override
+  String get statProfit => 'Profit';
+
+  @override
+  String get statLoss => 'Loss';
+
+  @override
+  String get toHandleTitle => 'To handle';
+
+  @override
+  String get toHandleEmpty =>
+      'Nothing to collect or pay. Amounts show up here once you add contracts or recurring payments.';
+
+  @override
+  String get booksSection => 'Your books';
+
+  @override
+  String get dueReceivable => 'To collect';
+
+  @override
+  String get duePayable => 'To pay';
+
+  @override
+  String badgeOverdue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days overdue',
+      one: '1 day overdue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get badgeToday => 'Due today';
+
+  @override
+  String badgePromised(String date) {
+    return 'Promised $date';
+  }
+
+  @override
+  String badgeDue(String date) {
+    return 'Due $date';
+  }
 }

@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../utils/money.dart';
 import 'category_seeds.dart';
 import 'labels.dart';
+import 'widgets.dart';
 
 /// Creates a new book, or edits the name and note of an existing one.
 /// Pops with `true` when something was saved.
@@ -86,78 +87,81 @@ class _BookFormScreenState extends State<BookFormScreen> {
       appBar: AppBar(title: Text(_isEditing ? l10n.editBook : l10n.createBook)),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _name,
-              autofocus: !_isEditing,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: l10n.bookName,
-                hintText: l10n.bookNameHint,
-                border: const OutlineInputBorder(),
+        child: PageBody(
+          maxWidth: 640,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+            children: [
+              TextFormField(
+                controller: _name,
+                autofocus: !_isEditing,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  labelText: l10n.bookName,
+                  hintText: l10n.bookNameHint,
+                ),
+                validator: (value) => (value == null || value.trim().isEmpty)
+                    ? l10n.fieldRequired
+                    : null,
               ),
-              validator: (value) => (value == null || value.trim().isEmpty)
-                  ? l10n.fieldRequired
-                  : null,
-            ),
-            const SizedBox(height: 24),
-            Text(l10n.bookTemplate, style: theme.textTheme.titleSmall),
-            const SizedBox(height: 8),
-            for (final template in templates)
-              _TemplateTile(
-                template: template,
-                selected: template == _template,
-                onTap: _isEditing
+              const SizedBox(height: 24),
+              Text(
+                l10n.bookTemplate,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              for (final template in templates)
+                _TemplateTile(
+                  template: template,
+                  selected: template == _template,
+                  onTap: _isEditing
+                      ? null
+                      : () => setState(() => _template = template),
+                ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                initialValue: _currency,
+                decoration: InputDecoration(
+                  labelText: l10n.currency,
+                ),
+                items: [
+                  for (final code in supportedCurrencies)
+                    DropdownMenuItem<String>(
+                      value: code,
+                      child: Text('$code (${currencySymbol(code)})'),
+                    ),
+                ],
+                onChanged: _isEditing
                     ? null
-                    : () => setState(() => _template = template),
+                    : (value) {
+                        if (value != null) setState(() => _currency = value);
+                      },
               ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              initialValue: _currency,
-              decoration: InputDecoration(
-                labelText: l10n.currency,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                for (final code in supportedCurrencies)
-                  DropdownMenuItem<String>(
-                    value: code,
-                    child: Text('$code (${currencySymbol(code)})'),
-                  ),
-              ],
-              onChanged: _isEditing
-                  ? null
-                  : (value) {
-                      if (value != null) setState(() => _currency = value);
-                    },
-            ),
-            if (_isEditing)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  l10n.templateLocked,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
+              if (_isEditing)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    l10n.templateLocked,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _note,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: l10n.note,
+                ),
               ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _note,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: l10n.note,
-                border: const OutlineInputBorder(),
+              const SizedBox(height: 24),
+              FilledButton(
+                onPressed: _saving ? null : _save,
+                child: Text(l10n.save),
               ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _saving ? null : _save,
-              child: Text(l10n.save),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -179,23 +183,54 @@ class _TemplateTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: selected ? scheme.primary : scheme.outlineVariant,
-          width: selected ? 2 : 1,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: scheme.surface,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: selected ? scheme.onSurface : scheme.outlineVariant,
+                width: selected ? 2 : 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(templateIcon(template)),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        templateLabel(l10n, template),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        templateDescription(l10n, template),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (selected) ...[
+                  const SizedBox(width: 12),
+                  Icon(Icons.check, color: scheme.onSurface),
+                ],
+              ],
+            ),
+          ),
         ),
-      ),
-      child: ListTile(
-        leading: Icon(templateIcon(template)),
-        title: Text(templateLabel(l10n, template)),
-        subtitle: Text(templateDescription(l10n, template)),
-        trailing:
-            selected ? Icon(Icons.check_circle, color: scheme.primary) : null,
-        onTap: onTap,
       ),
     );
   }

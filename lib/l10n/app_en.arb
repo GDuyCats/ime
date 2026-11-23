@@ -71,5 +71,52 @@
   "catPremises": "Premises rent",
   "catWages": "Wages",
   "catOtherIncome": "Other income",
-  "catOtherExpense": "Other expense"
+  "catOtherExpense": "Other expense",
+  "navOverview": "Overview",
+  "navBooks": "Books",
+  "monthTitle": "Month {month}/{year}",
+  "@monthTitle": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "statIncome": "Received",
+  "statExpense": "Spent",
+  "statProfit": "Profit",
+  "statLoss": "Loss",
+  "toHandleTitle": "To handle",
+  "toHandleEmpty": "Nothing to collect or pay. Amounts show up here once you add contracts or recurring payments.",
+  "booksSection": "Your books",
+  "dueReceivable": "To collect",
+  "duePayable": "To pay",
+  "badgeOverdue": "{days, plural, =1{1 day overdue} other{{days} days overdue}}",
+  "@badgeOverdue": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeToday": "Due today",
+  "badgePromised": "Promised {date}",
+  "@badgePromised": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgeDue": "Due {date}",
+  "@badgeDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

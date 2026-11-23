@@ -57,5 +57,21 @@
   "catPremises": "Mặt bằng",
   "catWages": "Lương",
   "catOtherIncome": "Thu khác",
-  "catOtherExpense": "Chi khác"
+  "catOtherExpense": "Chi khác",
+  "navOverview": "Tổng quan",
+  "navBooks": "Sổ",
+  "monthTitle": "Tháng {month}/{year}",
+  "statIncome": "Đã thu",
+  "statExpense": "Đã chi",
+  "statProfit": "Lời",
+  "statLoss": "Lỗ",
+  "toHandleTitle": "Cần xử lý",
+  "toHandleEmpty": "Chưa có khoản nào cần thu hay cần trả. Các khoản sẽ hiện ở đây khi bạn tạo hợp đồng hoặc khoản lặp lại.",
+  "booksSection": "Các sổ",
+  "dueReceivable": "Phải thu",
+  "duePayable": "Phải trả",
+  "badgeOverdue": "{days, plural, other{Quá hạn {days} ngày}}",
+  "badgeToday": "Hôm nay",
+  "badgePromised": "Hẹn trả {date}",
+  "badgeDue": "Hạn {date}"
 }

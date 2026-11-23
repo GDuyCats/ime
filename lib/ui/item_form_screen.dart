@@ -129,94 +129,92 @@ class _ItemFormScreenState extends State<ItemFormScreen> {
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _name,
-              autofocus: !isEditing,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: l10n.itemName,
-                hintText: l10n.itemNameHint,
-                border: const OutlineInputBorder(),
+        child: PageBody(
+          maxWidth: 640,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
+            children: [
+              TextFormField(
+                controller: _name,
+                autofocus: !isEditing,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  labelText: l10n.itemName,
+                  hintText: l10n.itemNameHint,
+                ),
+                validator: (value) => (value == null || value.trim().isEmpty)
+                    ? l10n.fieldRequired
+                    : null,
               ),
-              validator: (value) => (value == null || value.trim().isEmpty)
-                  ? l10n.fieldRequired
-                  : null,
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<ItemKind>(
-              initialValue: _kind,
-              decoration: InputDecoration(
-                labelText: l10n.itemKind,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                for (final kind in ItemKind.values)
-                  DropdownMenuItem<ItemKind>(
-                    value: kind,
-                    child: Row(
-                      children: [
-                        Icon(itemKindIcon(kind), size: 20),
-                        const SizedBox(width: 12),
-                        Text(itemKindLabel(l10n, kind)),
-                      ],
+              const SizedBox(height: 16),
+              DropdownButtonFormField<ItemKind>(
+                initialValue: _kind,
+                decoration: InputDecoration(
+                  labelText: l10n.itemKind,
+                ),
+                items: [
+                  for (final kind in ItemKind.values)
+                    DropdownMenuItem<ItemKind>(
+                      value: kind,
+                      child: Row(
+                        children: [
+                          Icon(itemKindIcon(kind), size: 20),
+                          const SizedBox(width: 12),
+                          Text(itemKindLabel(l10n, kind)),
+                        ],
+                      ),
                     ),
+                ],
+                onChanged: (value) {
+                  if (value != null) setState(() => _kind = value);
+                },
+              ),
+              if (_kind.hasArea) ...[
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _area,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: l10n.area,
                   ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) return null;
+                    return parseArea(value) == null ? l10n.invalidNumber : null;
+                  },
+                ),
               ],
-              onChanged: (value) {
-                if (value != null) setState(() => _kind = value);
-              },
-            ),
-            if (_kind.hasArea) ...[
               const SizedBox(height: 16),
               TextFormField(
-                controller: _area,
+                controller: _price,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
-                  labelText: l10n.area,
-                  border: const OutlineInputBorder(),
+                  labelText: l10n.defaultPrice,
+                  suffixText: currencySymbol(_currency),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) return null;
-                  return parseArea(value) == null ? l10n.invalidNumber : null;
+                  return parseMoney(value, _currency) == null
+                      ? l10n.invalidNumber
+                      : null;
                 },
               ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _note,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: l10n.note,
+                ),
+              ),
+              const SizedBox(height: 24),
+              FilledButton(
+                onPressed: _saving ? null : _save,
+                child: Text(l10n.save),
+              ),
             ],
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _price,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
-                labelText: l10n.defaultPrice,
-                suffixText: currencySymbol(_currency),
-                border: const OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) return null;
-                return parseMoney(value, _currency) == null
-                    ? l10n.invalidNumber
-                    : null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _note,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: l10n.note,
-                border: const OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _saving ? null : _save,
-              child: Text(l10n.save),
-            ),
-          ],
+          ),
         ),
       ),
     );

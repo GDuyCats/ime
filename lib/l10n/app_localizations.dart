@@ -445,6 +445,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other expense'**
   String get catOtherExpense;
+
+  /// No description provided for @navOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get navOverview;
+
+  /// No description provided for @navBooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Books'**
+  String get navBooks;
+
+  /// No description provided for @monthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Month {month}/{year}'**
+  String monthTitle(int month, int year);
+
+  /// No description provided for @statIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get statIncome;
+
+  /// No description provided for @statExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get statExpense;
+
+  /// No description provided for @statProfit.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get statProfit;
+
+  /// No description provided for @statLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss'**
+  String get statLoss;
+
+  /// No description provided for @toHandleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'To handle'**
+  String get toHandleTitle;
+
+  /// No description provided for @toHandleEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to collect or pay. Amounts show up here once you add contracts or recurring payments.'**
+  String get toHandleEmpty;
+
+  /// No description provided for @booksSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Your books'**
+  String get booksSection;
+
+  /// No description provided for @dueReceivable.
+  ///
+  /// In en, this message translates to:
+  /// **'To collect'**
+  String get dueReceivable;
+
+  /// No description provided for @duePayable.
+  ///
+  /// In en, this message translates to:
+  /// **'To pay'**
+  String get duePayable;
+
+  /// No description provided for @badgeOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day overdue} other{{days} days overdue}}'**
+  String badgeOverdue(int days);
+
+  /// No description provided for @badgeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Due today'**
+  String get badgeToday;
+
+  /// No description provided for @badgePromised.
+  ///
+  /// In en, this message translates to:
+  /// **'Promised {date}'**
+  String badgePromised(String date);
+
+  /// No description provided for @badgeDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due {date}'**
+  String badgeDue(String date);
 }
 
 class _AppLocalizationsDelegate

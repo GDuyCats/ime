@@ -2,6 +2,7 @@
 // (Kept in widget_test.dart so `flutter create .` does not add its own
 // default test that refers to a counter app.)
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ime/utils/dates.dart';
 import 'package:ime/utils/money.dart';
 import 'package:ime/utils/numbers.dart';
 
@@ -48,6 +49,50 @@ void main() {
     test('formats whole numbers without decimals', () {
       expect(formatArea(20), '20');
       expect(formatArea(20.5), '20.5');
+    });
+  });
+
+  group('dueStatusFor', () {
+    final today = DateTime(2026, 11, 23);
+
+    test('counts days overdue', () {
+      final status = dueStatusFor(dueDate: DateTime(2026, 11, 20), today: today);
+      expect(status.state, DueState.overdue);
+      expect(status.days, 3);
+    });
+
+    test('detects due today', () {
+      final status = dueStatusFor(dueDate: today, today: today);
+      expect(status.state, DueState.today);
+    });
+
+    test('a promise still ahead wins over overdue', () {
+      final status = dueStatusFor(
+        dueDate: DateTime(2026, 11, 10),
+        snoozedUntil: DateTime(2026, 11, 25),
+        today: today,
+      );
+      expect(status.state, DueState.promised);
+      expect(status.date, DateTime(2026, 11, 25));
+    });
+
+    test('a broken promise falls back to overdue', () {
+      final status = dueStatusFor(
+        dueDate: DateTime(2026, 11, 10),
+        snoozedUntil: DateTime(2026, 11, 20),
+        today: today,
+      );
+      expect(status.state, DueState.overdue);
+      expect(status.days, 13);
+    });
+  });
+
+  group('dates', () {
+    test('round-trips ISO dates', () {
+      final date = DateTime(2026, 1, 5);
+      expect(isoDate(date), '2026-01-05');
+      expect(parseIsoDate('2026-01-05'), date);
+      expect(parseIsoDate('bad'), isNull);
     });
   });
 }

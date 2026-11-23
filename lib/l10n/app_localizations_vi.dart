@@ -194,4 +194,66 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get catOtherExpense => 'Chi khác';
+
+  @override
+  String get navOverview => 'Tổng quan';
+
+  @override
+  String get navBooks => 'Sổ';
+
+  @override
+  String monthTitle(int month, int year) {
+    return 'Tháng $month/$year';
+  }
+
+  @override
+  String get statIncome => 'Đã thu';
+
+  @override
+  String get statExpense => 'Đã chi';
+
+  @override
+  String get statProfit => 'Lời';
+
+  @override
+  String get statLoss => 'Lỗ';
+
+  @override
+  String get toHandleTitle => 'Cần xử lý';
+
+  @override
+  String get toHandleEmpty =>
+      'Chưa có khoản nào cần thu hay cần trả. Các khoản sẽ hiện ở đây khi bạn tạo hợp đồng hoặc khoản lặp lại.';
+
+  @override
+  String get booksSection => 'Các sổ';
+
+  @override
+  String get dueReceivable => 'Phải thu';
+
+  @override
+  String get duePayable => 'Phải trả';
+
+  @override
+  String badgeOverdue(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Quá hạn $days ngày',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get badgeToday => 'Hôm nay';
+
+  @override
+  String badgePromised(String date) {
+    return 'Hẹn trả $date';
+  }
+
+  @override
+  String badgeDue(String date) {
+    return 'Hạn $date';
+  }
 }

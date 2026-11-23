@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'l10n/app_localizations.dart';
 import 'ui/home_screen.dart';
-
-const Color _brandColor = Color(0xFF0F6E56);
+import 'ui/theme.dart';
 
 class ImeApp extends StatelessWidget {
   const ImeApp({super.key});
@@ -17,17 +16,9 @@ class ImeApp extends StatelessWidget {
       locale: const Locale('vi'),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: _brandColor),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: _brandColor,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      // Follows the light or dark setting of Windows / Android.
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
       home: const HomeScreen(),
     );
   }

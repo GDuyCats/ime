@@ -9,6 +9,7 @@ import '../utils/numbers.dart';
 import 'book_form_screen.dart';
 import 'item_form_screen.dart';
 import 'labels.dart';
+import 'theme.dart';
 import 'widgets.dart';
 
 /// One book and the items inside it.
@@ -81,16 +82,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     final parts = <String>[itemKindLabel(l10n, item.kind)];
     final area = item.areaM2;
     if (area != null) parts.add('${formatArea(area)} m²');
-    final price = item.defaultPrice;
-    if (price != null) parts.add(formatMoney(price, _book.currency));
     return parts.join(' · ');
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final wide = MediaQuery.sizeOf(context).width >= AppTheme.wideBreakpoint;
+    final side = wide ? 24.0 : 16.0;
+
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 60,
         title: Text(_book.name),
         actions: [
           PopupMenuButton<_BookAction>(
@@ -115,14 +118,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (snapshot.hasError) {
-            return ErrorState(error: snapshot.error);
-          }
+          if (snapshot.hasError) return ErrorState(error: snapshot.error);
           final items = snapshot.data ?? const <Item>[];
           if (items.isEmpty) {
-            return EmptyState(
-              icon: templateIcon(_book.template),
-              message: l10n.noItems,
+            return Center(
+              child: EmptyState(
+                icon: templateIcon(_book.template),
+                message: l10n.noItems,
+              ),
             );
           }
 
@@ -133,45 +136,52 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               ? items
               : items.where((item) => item.kind == filter).toList();
 
-          return ListView(
-            padding: const EdgeInsets.only(bottom: 96),
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: Text(
+          return PageBody(
+            child: ListView(
+              padding: EdgeInsets.fromLTRB(side, 24, side, 104),
+              children: [
+                SectionTitle(
                   itemsSectionLabel(l10n, _book.template),
-                  style: Theme.of(context).textTheme.titleMedium,
+                  size: wide ? 36 : 30,
                 ),
-              ),
-              if (kinds.length > 1)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                  child: Wrap(
+                const SizedBox(height: 16),
+                if (kinds.length > 1) ...[
+                  Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      ChoiceChip(
-                        label: Text(l10n.filterAll),
+                      SelectableTag(
+                        label: l10n.filterAll,
                         selected: filter == null,
-                        onSelected: (_) => setState(() => _filter = null),
+                        onTap: () => setState(() => _filter = null),
                       ),
                       for (final kind in kinds)
-                        ChoiceChip(
-                          label: Text(itemKindLabel(l10n, kind)),
+                        SelectableTag(
+                          label: itemKindLabel(l10n, kind),
                           selected: filter == kind,
-                          onSelected: (_) => setState(() => _filter = kind),
+                          onTap: () => setState(() => _filter = kind),
                         ),
                     ],
                   ),
+                  const SizedBox(height: 16),
+                ],
+                BorderedList(
+                  children: [
+                    for (final item in visible)
+                      ListRow(
+                        leading: Icon(itemKindIcon(item.kind)),
+                        title: item.name,
+                        subtitle: _itemSubtitle(l10n, item),
+                        trailing: _PriceText(
+                          price: item.defaultPrice,
+                          currency: _book.currency,
+                        ),
+                        onTap: () => _openItemForm(item),
+                      ),
+                  ],
                 ),
-              for (final item in visible)
-                ListTile(
-                  leading: Icon(itemKindIcon(item.kind)),
-                  title: Text(item.name),
-                  subtitle: Text(_itemSubtitle(l10n, item)),
-                  onTap: () => _openItemForm(item),
-                ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -179,6 +189,27 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         onPressed: () => _openItemForm(),
         icon: const Icon(Icons.add),
         label: Text(l10n.addItem),
+      ),
+    );
+  }
+}
+
+/// Right-aligned price, or nothing when the item has no default price.
+class _PriceText extends StatelessWidget {
+  const _PriceText({required this.price, required this.currency});
+
+  final int? price;
+  final String currency;
+
+  @override
+  Widget build(BuildContext context) {
+    final value = price;
+    if (value == null) return const SizedBox.shrink();
+    return Text(
+      formatMoney(value, currency),
+      style: const TextStyle(
+        fontWeight: FontWeight.w700,
+        fontFeatures: tabularFigures,
       ),
     );
   }
