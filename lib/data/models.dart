@@ -400,3 +400,73 @@ class ContractDetail {
   final Contact contact;
   final List<ChargeTemplate> charges;
 }
+
+/// A saved set of rent-out settings that fills the form for a new tenant.
+class RentalTemplate {
+  const RentalTemplate({
+    required this.id,
+    required this.bookId,
+    required this.name,
+    this.rentAmount,
+    required this.cycle,
+    required this.occupants,
+    required this.depositMonths,
+    required this.isDefault,
+    required this.charges,
+  });
+
+  final String id;
+  final String bookId;
+
+  /// Empty for the template made automatically from older default charges;
+  /// the app shows a localized name instead.
+  final String name;
+
+  /// Null means "use the room's own default price".
+  final int? rentAmount;
+  final BillingCycle cycle;
+  final int occupants;
+  final int depositMonths;
+
+  /// Applied automatically when a rent-out form opens.
+  final bool isDefault;
+  final List<ChargeInput> charges;
+
+  factory RentalTemplate.fromMap(
+    Map<String, Object?> map,
+    List<ChargeInput> charges,
+  ) {
+    return RentalTemplate(
+      id: map['id']! as String,
+      bookId: map['book_id']! as String,
+      name: (map['name'] as String?) ?? '',
+      rentAmount: map['rent_amount'] as int?,
+      cycle: BillingCycle.fromDb(map['cycle']! as String),
+      occupants: (map['occupants'] as int?) ?? 1,
+      depositMonths: (map['deposit_months'] as int?) ?? 1,
+      isDefault: map['is_default'] == 1,
+      charges: charges,
+    );
+  }
+}
+
+/// Values of a template being created or edited.
+class RentalTemplateInput {
+  const RentalTemplateInput({
+    required this.name,
+    this.rentAmount,
+    required this.cycle,
+    required this.occupants,
+    required this.depositMonths,
+    required this.isDefault,
+    required this.charges,
+  });
+
+  final String name;
+  final int? rentAmount;
+  final BillingCycle cycle;
+  final int occupants;
+  final int depositMonths;
+  final bool isDefault;
+  final List<ChargeInput> charges;
+}

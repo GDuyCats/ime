@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../data/book_repository.dart';
 import '../data/contact_repository.dart';
 import '../data/contract_repository.dart';
 import '../data/models.dart';
+import '../data/rental_template_repository.dart';
 import '../l10n/app_localizations.dart';
 import '../utils/billing.dart';
 import '../utils/dates.dart';
@@ -53,6 +53,15 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
 
   List<Contact> _contacts = const [];
   List<ChargeInput>? _charges;
+
+  /// Charges of every template of the book, offered as quick picks.
+  List<ChargeInput> _presets = const [];
+
+  List<RentalTemplate> _templates = const [];
+  String? _appliedTemplateId;
+
+  /// Months of rent the deposit is suggested as; set by templates.
+  int _depositMonths = 1;
   bool _saving = false;
 
   bool get _isEditing => widget.existing != null;
@@ -77,7 +86,7 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
           : rent == null
               ? ''
               : formatMoneyPlain(
-                  suggestedDeposit(rent, widget.book.depositMonths),
+                  suggestedDeposit(rent, _depositMonths),
                   _currency,
                 ),
     );
@@ -94,18 +103,102 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
   Future<void> _load() async {
     final existing = widget.existing;
     final contacts = await ContactRepository().listContacts();
-    final charges = existing != null
-        ? [for (final c in existing.charges) c.toInput()]
-        : [
-            for (final c
-                in await BookRepository().listDefaultCharges(widget.book.id))
-              c.toInput(),
-          ];
+    final templates =
+        await RentalTemplateRepository().listTemplates(widget.book.id);
     if (!mounted) return;
     setState(() {
       _contacts = contacts;
-      _charges = charges;
+      _setTemplates(templates);
+      _charges = existing != null
+          ? [for (final c in existing.charges) c.toInput()]
+          : <ChargeInput>[];
     });
+
+    // A new contract starts from the default template, if there is one.
+    if (existing == null) {
+      for (final template in templates) {
+        if (template.isDefault) {
+          _applyTemplate(template);
+          break;
+        }
+      }
+    }
+  }
+
+  /// Stores the templates and collects their charges as quick picks,
+  /// without repeating identical ones.
+  void _setTemplates(List<RentalTemplate> templates) {
+    _templates = templates;
+    final seen = <String>{};
+    _presets = [
+      for (final template in templates)
+        for (final charge in template.charges)
+          if (seen.add(
+            '${charge.name}|${charge.calcType.dbValue}|${charge.unitPrice}',
+          ))
+            charge,
+    ];
+  }
+
+  /// Fills the form from a template. Rent falls back to the room's own
+  /// price when the template has none. The tenant, move-in date and meter
+  /// readings stay for the user to enter.
+  void _applyTemplate(RentalTemplate template) {
+    setState(() {
+      _appliedTemplateId = template.id;
+      _depositMonths = template.depositMonths;
+      _depositEdited = false;
+      if (!_isEditing) _cycle = template.cycle;
+      _occupants.text = '${template.occupants}';
+      _charges = [...template.charges];
+    });
+    final rent = template.rentAmount ?? widget.item.defaultPrice;
+    _rent.text = rent == null ? '' : formatMoneyPlain(rent, _currency);
+    // Setting the same rent text does not notify listeners.
+    _syncDeposit();
+  }
+
+  /// Saves what is in the form as a new template of the book.
+  Future<void> _saveAsTemplate() async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final charges = _charges;
+    if (charges == null) return;
+
+    final name = await showDialog<String>(
+      context: context,
+      builder: (_) => const _TemplateNameDialog(),
+    );
+    if (name == null || name.isEmpty) return;
+
+    final rent = parseMoney(_rent.text, _currency);
+    final deposit = parseMoney(_deposit.text, _currency) ?? 0;
+    final months = rent == null || rent == 0 ? 1 : (deposit / rent).round();
+    final repository = RentalTemplateRepository();
+    await repository.saveTemplate(
+      widget.book.id,
+      RentalTemplateInput(
+        name: name,
+        rentAmount: rent,
+        cycle: _cycle,
+        occupants: int.tryParse(_occupants.text.trim()) ?? 1,
+        depositMonths: months,
+        // The first template of a book becomes its default.
+        isDefault: _templates.isEmpty,
+        charges: [
+          for (final charge in charges)
+            ChargeInput(
+              name: charge.name,
+              calcType: charge.calcType,
+              unitPrice: charge.unitPrice,
+            ),
+        ],
+      ),
+    );
+    final templates = await repository.listTemplates(widget.book.id);
+    if (!mounted) return;
+    setState(() => _setTemplates(templates));
+    messenger.showSnackBar(SnackBar(content: Text(l10n.templateSaved(name))));
   }
 
   void _syncDeposit() {
@@ -114,7 +207,7 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
     _deposit.text = rent == null
         ? ''
         : formatMoneyPlain(
-            suggestedDeposit(rent, widget.book.depositMonths),
+            suggestedDeposit(rent, _depositMonths),
             _currency,
           );
   }
@@ -304,6 +397,29 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
               const SizedBox(height: 28),
               SectionTitle(l10n.currentContract),
               const SizedBox(height: 10),
+              if (!_isEditing && _templates.isNotEmpty) ...[
+                Text(
+                  l10n.useTemplate,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final template in _templates)
+                      SelectableTag(
+                        label: templateName(l10n, template),
+                        selected: _appliedTemplateId == template.id,
+                        onTap: () => _applyTemplate(template),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
               TextFormField(
                 controller: _rent,
                 keyboardType:
@@ -397,9 +513,16 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
                   charges: charges,
                   currency: _currency,
                   askMeterReading: true,
+                  presets: _presets,
                   onChanged: (next) => setState(() => _charges = next),
                 ),
               const SizedBox(height: 28),
+              OutlinedButton.icon(
+                onPressed: charges == null ? null : _saveAsTemplate,
+                icon: const Icon(Icons.bookmark_add_outlined),
+                label: Text(l10n.saveAsTemplate),
+              ),
+              const SizedBox(height: 10),
               FilledButton(
                 onPressed: _saving || charges == null ? null : _save,
                 child: Text(l10n.save),
@@ -408,6 +531,58 @@ class _ContractFormScreenState extends State<ContractFormScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Asks for the name of a new template. Pops with the trimmed name.
+class _TemplateNameDialog extends StatefulWidget {
+  const _TemplateNameDialog();
+
+  @override
+  State<_TemplateNameDialog> createState() => _TemplateNameDialogState();
+}
+
+class _TemplateNameDialogState extends State<_TemplateNameDialog> {
+  final TextEditingController _name = TextEditingController();
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final name = _name.text.trim();
+    if (name.isEmpty) return;
+    Navigator.of(context).pop(name);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l10n.saveAsTemplate),
+      content: SizedBox(
+        width: 380,
+        child: TextField(
+          controller: _name,
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+            labelText: l10n.templateNameLabel,
+            hintText: l10n.templateNameHint,
+          ),
+          onSubmitted: (_) => _submit(),
+        ),
+      ),
+      actions: [
+        OutlinedButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(onPressed: _submit, child: Text(l10n.save)),
+      ],
     );
   }
 }

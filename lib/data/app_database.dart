@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart'
     show databaseFactoryFfi, sqfliteFfiInit;
 
+import '../utils/ids.dart';
 import 'schema.dart';
 
 /// Opens and owns the single local SQLite database of the app.
@@ -15,7 +16,7 @@ class AppDatabase {
   static final AppDatabase instance = AppDatabase._();
 
   static const String _fileName = 'ime.db';
-  static const int _version = 2;
+  static const int _version = 3;
 
   Future<Database>? _opening;
 
@@ -68,6 +69,42 @@ class AppDatabase {
     int newVersion,
   ) async {
     if (oldVersion < 2) await _run(db, migrationV2);
+    if (oldVersion < 3) {
+      await _run(db, migrationV3);
+      await _moveBookChargesIntoTemplates(db);
+    }
+  }
+
+  /// Turns each book's old default charges into a default rental template,
+  /// so nothing typed before version 3 is lost. The template gets an empty
+  /// name; the app shows it as "Default template" in the user's language.
+  static Future<void> _moveBookChargesIntoTemplates(Database db) async {
+    final books = await db.rawQuery('''
+      SELECT DISTINCT b.id, b.deposit_months
+      FROM books b
+      JOIN charge_templates c ON c.book_id = b.id
+      WHERE c.contract_id IS NULL AND c.deleted_at IS NULL
+        AND b.deleted_at IS NULL
+    ''');
+    final now = nowMillis();
+    for (final book in books) {
+      final templateId = newId();
+      await db.insert('rental_templates', {
+        'id': templateId,
+        'book_id': book['id'],
+        'name': '',
+        'deposit_months': (book['deposit_months'] as int?) ?? 1,
+        'is_default': 1,
+        'created_at': now,
+        'updated_at': now,
+      });
+      await db.update(
+        'charge_templates',
+        {'rental_template_id': templateId, 'book_id': null, 'updated_at': now},
+        where: 'book_id = ? AND contract_id IS NULL AND deleted_at IS NULL',
+        whereArgs: [book['id']],
+      );
+    }
   }
 
   static Future<void> _run(Database db, List<String> statements) async {

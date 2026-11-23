@@ -1,7 +1,6 @@
 {
   "@@locale": "en",
   "appTitle": "IME",
-  "booksTitle": "Books",
   "noBooksTitle": "No books yet",
   "noBooksBody": "Create a book for each thing you manage: a boarding house, a shop, a rental vehicle.",
   "createBook": "Create book",
@@ -127,8 +126,6 @@
   "rentPrepaidDesc": "Tenant pays at the start of each period.",
   "depositMonthsLabel": "Default deposit (months of rent)",
   "noticeDaysLabel": "Days of notice before moving out",
-  "defaultChargesTitle": "Default charges",
-  "defaultChargesHint": "New contracts start with these charges. Each room can still change them.",
   "noCharges": "No extra charges yet.",
   "addCharge": "Add charge",
   "editCharge": "Edit charge",
@@ -245,5 +242,44 @@
   "notRenting": "Not renting",
   "cannotDeleteRenting": "This person still rents something. End the contract before deleting.",
   "deletePersonTitle": "Delete this person?",
-  "deletePersonBody": "This person will be removed from the list."
+  "deletePersonBody": "This person will be removed from the list.",
+  "quickPick": "Quick pick",
+  "presetElectricity": "Electricity",
+  "presetWater": "Water",
+  "presetInternet": "Wifi",
+  "presetTrash": "Trash",
+  "presetParking": "Parking",
+  "templatesTitle": "Rental templates",
+  "templatesHint": "Save the usual rent, deposit and charges once, then fill the rent-out form for a new tenant in one tap.",
+  "noTemplates": "No templates yet. Add one here, or tap \"Save as template\" when renting out.",
+  "templateDefaultBadge": "Default",
+  "addTemplate": "Add template",
+  "editTemplate": "Edit template",
+  "templateUnnamed": "Default template",
+  "templateRoomPrice": "Room's own price",
+  "chargeCount": "{count, plural, =0{no extra charges} =1{1 extra charge} other{{count} extra charges}}",
+  "@chargeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteTemplateTitle": "Delete this template?",
+  "deleteTemplateBody": "Contracts already made from it stay the same.",
+  "templateNameLabel": "Template name",
+  "templateNameHint": "Standard room",
+  "templateRentHelper": "Leave empty to use each room's own price.",
+  "templateIsDefault": "Default template",
+  "templateIsDefaultHint": "Filled in automatically when you rent out a room.",
+  "useTemplate": "Use template",
+  "saveAsTemplate": "Save as template",
+  "templateSaved": "Saved template \"{name}\"",
+  "@templateSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

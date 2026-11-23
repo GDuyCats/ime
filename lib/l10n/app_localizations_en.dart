@@ -12,9 +12,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'IME';
 
   @override
-  String get booksTitle => 'Books';
-
-  @override
   String get noBooksTitle => 'No books yet';
 
   @override
@@ -286,13 +283,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noticeDaysLabel => 'Days of notice before moving out';
 
   @override
-  String get defaultChargesTitle => 'Default charges';
-
-  @override
-  String get defaultChargesHint =>
-      'New contracts start with these charges. Each room can still change them.';
-
-  @override
   String get noCharges => 'No extra charges yet.';
 
   @override
@@ -493,4 +483,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deletePersonBody => 'This person will be removed from the list.';
+
+  @override
+  String get quickPick => 'Quick pick';
+
+  @override
+  String get presetElectricity => 'Electricity';
+
+  @override
+  String get presetWater => 'Water';
+
+  @override
+  String get presetInternet => 'Wifi';
+
+  @override
+  String get presetTrash => 'Trash';
+
+  @override
+  String get presetParking => 'Parking';
+
+  @override
+  String get templatesTitle => 'Rental templates';
+
+  @override
+  String get templatesHint =>
+      'Save the usual rent, deposit and charges once, then fill the rent-out form for a new tenant in one tap.';
+
+  @override
+  String get noTemplates =>
+      'No templates yet. Add one here, or tap \"Save as template\" when renting out.';
+
+  @override
+  String get templateDefaultBadge => 'Default';
+
+  @override
+  String get addTemplate => 'Add template';
+
+  @override
+  String get editTemplate => 'Edit template';
+
+  @override
+  String get templateUnnamed => 'Default template';
+
+  @override
+  String get templateRoomPrice => 'Room\'s own price';
+
+  @override
+  String chargeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count extra charges',
+      one: '1 extra charge',
+      zero: 'no extra charges',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deleteTemplateTitle => 'Delete this template?';
+
+  @override
+  String get deleteTemplateBody =>
+      'Contracts already made from it stay the same.';
+
+  @override
+  String get templateNameLabel => 'Template name';
+
+  @override
+  String get templateNameHint => 'Standard room';
+
+  @override
+  String get templateRentHelper => 'Leave empty to use each room\'s own price.';
+
+  @override
+  String get templateIsDefault => 'Default template';
+
+  @override
+  String get templateIsDefaultHint =>
+      'Filled in automatically when you rent out a room.';
+
+  @override
+  String get useTemplate => 'Use template';
+
+  @override
+  String get saveAsTemplate => 'Save as template';
+
+  @override
+  String templateSaved(String name) {
+    return 'Saved template \"$name\"';
+  }
 }

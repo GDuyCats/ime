@@ -227,3 +227,32 @@ const List<String> migrationV2 = [
   'ALTER TABLE due_lines ADD COLUMN paid_amount INTEGER NOT NULL DEFAULT 0',
   'CREATE INDEX idx_contacts_name ON contacts(name)',
 ];
+
+/// Version 3: rental templates. A template pre-fills the rent-out form for
+/// a new tenant (rent, cycle, occupants, deposit, extra charges).
+/// Extra charges now belong to a contract or to a template; the former
+/// per-book default charges are moved into a default template by
+/// `AppDatabase` during the upgrade.
+const List<String> migrationV3 = [
+  '''
+  CREATE TABLE rental_templates (
+    id TEXT PRIMARY KEY,
+    book_id TEXT NOT NULL REFERENCES books(id),
+    name TEXT NOT NULL,
+    rent_amount INTEGER,
+    cycle TEXT NOT NULL DEFAULT 'month',
+    occupants INTEGER NOT NULL DEFAULT 1,
+    deposit_months INTEGER NOT NULL DEFAULT 1,
+    is_default INTEGER NOT NULL DEFAULT 0,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL,
+    deleted_at INTEGER
+  )
+  ''',
+  'CREATE INDEX idx_rental_templates_book ON rental_templates(book_id)',
+  'ALTER TABLE charge_templates ADD COLUMN rental_template_id TEXT '
+      'REFERENCES rental_templates(id)',
+  'CREATE INDEX idx_charge_templates_rental_template '
+      'ON charge_templates(rental_template_id)',
+];

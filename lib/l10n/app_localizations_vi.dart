@@ -12,9 +12,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appTitle => 'IME';
 
   @override
-  String get booksTitle => 'Sổ';
-
-  @override
   String get noBooksTitle => 'Chưa có sổ nào';
 
   @override
@@ -282,13 +279,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String get noticeDaysLabel => 'Số ngày phải báo trước khi trả phòng';
 
   @override
-  String get defaultChargesTitle => 'Khoản phụ mặc định';
-
-  @override
-  String get defaultChargesHint =>
-      'Hợp đồng mới sẽ tự lấy các khoản này, từng phòng vẫn sửa riêng được.';
-
-  @override
   String get noCharges => 'Chưa có khoản phụ nào.';
 
   @override
@@ -489,4 +479,93 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get deletePersonBody => 'Người này sẽ bị xóa khỏi danh sách.';
+
+  @override
+  String get quickPick => 'Chọn nhanh';
+
+  @override
+  String get presetElectricity => 'Điện';
+
+  @override
+  String get presetWater => 'Nước';
+
+  @override
+  String get presetInternet => 'Wifi';
+
+  @override
+  String get presetTrash => 'Rác';
+
+  @override
+  String get presetParking => 'Gửi xe';
+
+  @override
+  String get templatesTitle => 'Mẫu cho thuê';
+
+  @override
+  String get templatesHint =>
+      'Lưu sẵn giá thuê, tiền cọc và khoản phụ thường dùng, có khách mới chỉ cần bấm một lần là điền sẵn form cho thuê.';
+
+  @override
+  String get noTemplates =>
+      'Chưa có mẫu nào. Thêm ở đây, hoặc bấm \"Lưu thành mẫu\" khi cho thuê.';
+
+  @override
+  String get templateDefaultBadge => 'Mặc định';
+
+  @override
+  String get addTemplate => 'Thêm mẫu';
+
+  @override
+  String get editTemplate => 'Sửa mẫu';
+
+  @override
+  String get templateUnnamed => 'Mẫu mặc định';
+
+  @override
+  String get templateRoomPrice => 'Giá theo phòng';
+
+  @override
+  String chargeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count khoản phụ',
+      zero: 'không có khoản phụ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get deleteTemplateTitle => 'Xóa mẫu này?';
+
+  @override
+  String get deleteTemplateBody =>
+      'Các hợp đồng đã tạo từ mẫu này không bị ảnh hưởng.';
+
+  @override
+  String get templateNameLabel => 'Tên mẫu';
+
+  @override
+  String get templateNameHint => 'Phòng thường';
+
+  @override
+  String get templateRentHelper =>
+      'Để trống thì dùng giá mặc định của từng phòng.';
+
+  @override
+  String get templateIsDefault => 'Mẫu mặc định';
+
+  @override
+  String get templateIsDefaultHint => 'Tự điền sẵn mỗi khi bạn bấm Cho thuê.';
+
+  @override
+  String get useTemplate => 'Dùng mẫu';
+
+  @override
+  String get saveAsTemplate => 'Lưu thành mẫu';
+
+  @override
+  String templateSaved(String name) {
+    return 'Đã lưu mẫu \"$name\"';
+  }
 }

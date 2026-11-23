@@ -12,6 +12,10 @@ import 'widgets.dart';
 ///
 /// Used for a book's default charges and for one contract's charges.
 /// Contracts also ask for the starting meter reading of metered charges.
+///
+/// Adding a charge offers a quick pick: [presets] (the book's own default
+/// charges, with prices) first, then common charges such as electricity
+/// and water.
 class ChargeEditor extends StatelessWidget {
   const ChargeEditor({
     super.key,
@@ -19,20 +23,26 @@ class ChargeEditor extends StatelessWidget {
     required this.currency,
     required this.onChanged,
     this.askMeterReading = false,
+    this.presets = const [],
   });
 
   final List<ChargeInput> charges;
   final String currency;
   final ValueChanged<List<ChargeInput>> onChanged;
   final bool askMeterReading;
+  final List<ChargeInput> presets;
 
   Future<void> _edit(BuildContext context, [int? index]) async {
     final result = await showDialog<ChargeInput>(
       context: context,
-      builder: (_) => _ChargeDialog(
+      builder: (dialogContext) => _ChargeDialog(
         initial: index == null ? null : charges[index],
         currency: currency,
         askMeterReading: askMeterReading,
+        quickPicks: [
+          ...presets,
+          ...commonCharges(AppLocalizations.of(dialogContext)),
+        ],
       ),
     );
     if (result == null) return;
@@ -106,16 +116,59 @@ class ChargeEditor extends StatelessWidget {
   }
 }
 
+/// Charges most rentals have. Prices are left at zero for the user to fill.
+List<ChargeInput> commonCharges(AppLocalizations l10n) {
+  return [
+    ChargeInput(
+      name: l10n.presetElectricity,
+      calcType: ChargeCalcType.meter,
+      unitPrice: 0,
+    ),
+    ChargeInput(
+      name: l10n.presetWater,
+      calcType: ChargeCalcType.meter,
+      unitPrice: 0,
+    ),
+    ChargeInput(
+      name: l10n.presetWater,
+      calcType: ChargeCalcType.perPerson,
+      unitPrice: 0,
+    ),
+    ChargeInput(
+      name: l10n.presetWater,
+      calcType: ChargeCalcType.fixed,
+      unitPrice: 0,
+    ),
+    ChargeInput(
+      name: l10n.presetInternet,
+      calcType: ChargeCalcType.fixed,
+      unitPrice: 0,
+    ),
+    ChargeInput(
+      name: l10n.presetTrash,
+      calcType: ChargeCalcType.fixed,
+      unitPrice: 0,
+    ),
+    ChargeInput(
+      name: l10n.presetParking,
+      calcType: ChargeCalcType.fixed,
+      unitPrice: 0,
+    ),
+  ];
+}
+
 class _ChargeDialog extends StatefulWidget {
   const _ChargeDialog({
     required this.initial,
     required this.currency,
     required this.askMeterReading,
+    required this.quickPicks,
   });
 
   final ChargeInput? initial;
   final String currency;
   final bool askMeterReading;
+  final List<ChargeInput> quickPicks;
 
   @override
   State<_ChargeDialog> createState() => _ChargeDialogState();
@@ -155,6 +208,26 @@ class _ChargeDialogState extends State<_ChargeDialog> {
 
   bool get _hasPrice => _calcType != ChargeCalcType.manual;
 
+  /// Fills the form from a quick-pick entry; everything stays editable.
+  void _applyPick(ChargeInput pick) {
+    setState(() {
+      _name.text = pick.name;
+      _calcType = pick.calcType;
+      _price.text = pick.unitPrice > 0
+          ? formatMoneyPlain(pick.unitPrice, widget.currency)
+          : '';
+      final reading = pick.meterReading;
+      if (reading != null) _reading.text = formatArea(reading);
+    });
+  }
+
+  String _pickLabel(AppLocalizations l10n, ChargeInput pick) {
+    final how = pick.unitPrice > 0 || pick.calcType == ChargeCalcType.manual
+        ? chargeSummary(l10n, pick, widget.currency)
+        : calcTypeLabel(l10n, pick.calcType);
+    return '${pick.name} · $how';
+  }
+
   bool get _hasReading =>
       widget.askMeterReading && _calcType == ChargeCalcType.meter;
 
@@ -187,9 +260,29 @@ class _ChargeDialogState extends State<_ChargeDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (widget.initial == null && widget.quickPicks.isNotEmpty) ...[
+                  DropdownButtonFormField<int>(
+                    isExpanded: true,
+                    decoration: InputDecoration(labelText: l10n.quickPick),
+                    items: [
+                      for (var i = 0; i < widget.quickPicks.length; i++)
+                        DropdownMenuItem<int>(
+                          value: i,
+                          child: Text(
+                            _pickLabel(l10n, widget.quickPicks[i]),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                    onChanged: (index) {
+                      if (index != null) _applyPick(widget.quickPicks[index]);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 TextFormField(
                   controller: _name,
-                  autofocus: widget.initial == null,
+                  autofocus: false,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
                     labelText: l10n.chargeName,
@@ -201,6 +294,8 @@ class _ChargeDialogState extends State<_ChargeDialog> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<ChargeCalcType>(
+                  // Rebuilt when a quick pick changes the type.
+                  key: ValueKey(_calcType),
                   initialValue: _calcType,
                   decoration: InputDecoration(labelText: l10n.calcType),
                   items: [

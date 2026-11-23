@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../data/book_repository.dart';
 import '../data/models.dart';
+import '../data/rental_template_repository.dart';
 import '../l10n/app_localizations.dart';
-import 'charge_editor.dart';
+import 'labels.dart';
+import 'rental_template_form_screen.dart';
 import 'widgets.dart';
 
-/// Defaults of a rental book: when rent is collected, the usual deposit,
-/// the notice period and the extra charges every new contract starts with.
-/// Pops with `true` when saved.
+/// Settings shared by every contract of a rental book (when rent is
+/// collected, notice period) and its rental templates.
+/// Pops with `true` when the settings were saved.
 class BookSettingsScreen extends StatefulWidget {
   const BookSettingsScreen({super.key, required this.book});
 
@@ -21,48 +23,50 @@ class BookSettingsScreen extends StatefulWidget {
 class _BookSettingsScreenState extends State<BookSettingsScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final BookRepository _books = BookRepository();
-  late final TextEditingController _depositMonths;
+  final RentalTemplateRepository _templates = RentalTemplateRepository();
   late final TextEditingController _noticeDays;
   late RentTiming _rentTiming;
-  List<ChargeInput>? _charges;
+  late Future<List<RentalTemplate>> _templatesFuture;
   bool _saving = false;
 
   @override
   void initState() {
     super.initState();
-    final book = widget.book;
-    _depositMonths = TextEditingController(text: '${book.depositMonths}');
-    _noticeDays = TextEditingController(text: '${book.noticeDays}');
-    _rentTiming = book.rentTiming;
-    _loadCharges();
-  }
-
-  Future<void> _loadCharges() async {
-    final charges = await _books.listDefaultCharges(widget.book.id);
-    if (!mounted) return;
-    setState(() => _charges = [for (final c in charges) c.toInput()]);
+    _noticeDays = TextEditingController(text: '${widget.book.noticeDays}');
+    _rentTiming = widget.book.rentTiming;
+    _templatesFuture = _templates.listTemplates(widget.book.id);
   }
 
   @override
   void dispose() {
-    _depositMonths.dispose();
     _noticeDays.dispose();
     super.dispose();
   }
 
+  Future<void> _openTemplate([RentalTemplate? template]) async {
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) =>
+            RentalTemplateFormScreen(book: widget.book, template: template),
+      ),
+    );
+    if (saved == true && mounted) {
+      setState(() {
+        _templatesFuture = _templates.listTemplates(widget.book.id);
+      });
+    }
+  }
+
   Future<void> _save() async {
     final form = _formKey.currentState;
-    final charges = _charges;
-    if (form == null || !form.validate() || charges == null) return;
+    if (form == null || !form.validate()) return;
 
     setState(() => _saving = true);
     try {
       await _books.saveRentalSettings(
         widget.book.id,
         rentTiming: _rentTiming,
-        depositMonths: int.parse(_depositMonths.text.trim()),
         noticeDays: int.parse(_noticeDays.text.trim()),
-        charges: charges,
       );
       if (!mounted) return;
       Navigator.of(context).pop(true);
@@ -71,17 +75,10 @@ class _BookSettingsScreenState extends State<BookSettingsScreen> {
     }
   }
 
-  String? _validateWholeNumber(AppLocalizations l10n, String? value) {
-    final number = int.tryParse(value?.trim() ?? '');
-    if (number == null || number < 0) return l10n.mustBeWholeNumber;
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final charges = _charges;
 
     return Scaffold(
       appBar: AppBar(toolbarHeight: 60, title: Text(l10n.bookSettings)),
@@ -99,13 +96,13 @@ class _BookSettingsScreenState extends State<BookSettingsScreen> {
               const SizedBox(height: 4),
               SectionTitle(l10n.rentTimingLabel),
               const SizedBox(height: 10),
-              _ChoiceTile(
+              ChoiceTile(
                 title: l10n.rentPostpaid,
                 description: l10n.rentPostpaidDesc,
                 selected: _rentTiming == RentTiming.postpaid,
                 onTap: () => setState(() => _rentTiming = RentTiming.postpaid),
               ),
-              _ChoiceTile(
+              ChoiceTile(
                 title: l10n.rentPrepaid,
                 description: l10n.rentPrepaidDesc,
                 selected: _rentTiming == RentTiming.prepaid,
@@ -113,106 +110,82 @@ class _BookSettingsScreenState extends State<BookSettingsScreen> {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _depositMonths,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: l10n.depositMonthsLabel),
-                validator: (value) => _validateWholeNumber(l10n, value),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
                 controller: _noticeDays,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: l10n.noticeDaysLabel),
-                validator: (value) => _validateWholeNumber(l10n, value),
+                validator: (value) {
+                  final number = int.tryParse(value?.trim() ?? '');
+                  if (number == null || number < 0) {
+                    return l10n.mustBeWholeNumber;
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(height: 28),
-              SectionTitle(l10n.defaultChargesTitle),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: _saving ? null : _save,
+                child: Text(l10n.save),
+              ),
+              const SizedBox(height: 32),
+              SectionTitle(l10n.templatesTitle),
               const SizedBox(height: 4),
               Text(
-                l10n.defaultChargesHint,
+                l10n.templatesHint,
                 style: TextStyle(fontSize: 13, color: scheme.onSurfaceVariant),
               ),
               const SizedBox(height: 10),
-              if (charges == null)
-                const Center(child: CircularProgressIndicator())
-              else
-                ChargeEditor(
-                  charges: charges,
-                  currency: widget.book.currency,
-                  onChanged: (next) => setState(() => _charges = next),
-                ),
-              const SizedBox(height: 28),
-              FilledButton(
-                onPressed: _saving || charges == null ? null : _save,
-                child: Text(l10n.save),
+              FutureBuilder<List<RentalTemplate>>(
+                future: _templatesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return ErrorState(error: snapshot.error);
+                  }
+                  final templates = snapshot.data ?? const <RentalTemplate>[];
+                  if (templates.isEmpty) {
+                    return BorderedList(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            l10n.noTemplates,
+                            style: TextStyle(color: scheme.onSurfaceVariant),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return BorderedList(
+                    children: [
+                      for (final template in templates)
+                        ListRow(
+                          title: templateName(l10n, template),
+                          subtitle: templateSummary(
+                            l10n,
+                            template,
+                            widget.book.currency,
+                          ),
+                          trailing: template.isDefault
+                              ? StatusBadge(
+                                  label: l10n.templateDefaultBadge,
+                                  color: scheme.onSurface,
+                                )
+                              : const Icon(Icons.chevron_right),
+                          onTap: () => _openTemplate(template),
+                        ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => _openTemplate(),
+                icon: const Icon(Icons.add),
+                label: Text(l10n.addTemplate),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A bordered option with a title and description; black border when
-/// selected.
-class _ChoiceTile extends StatelessWidget {
-  const _ChoiceTile({
-    required this.title,
-    required this.description,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String title;
-  final String description;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        color: scheme.surface,
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: selected ? scheme.onSurface : scheme.outlineVariant,
-                width: selected ? 2 : 1,
-              ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        description,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: scheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (selected) Icon(Icons.check, color: scheme.onSurface),
-              ],
-            ),
           ),
         ),
       ),

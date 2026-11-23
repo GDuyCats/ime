@@ -104,12 +104,6 @@ abstract class AppLocalizations {
   /// **'IME'**
   String get appTitle;
 
-  /// No description provided for @booksTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Books'**
-  String get booksTitle;
-
   /// No description provided for @noBooksTitle.
   ///
   /// In en, this message translates to:
@@ -590,18 +584,6 @@ abstract class AppLocalizations {
   /// **'Days of notice before moving out'**
   String get noticeDaysLabel;
 
-  /// No description provided for @defaultChargesTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Default charges'**
-  String get defaultChargesTitle;
-
-  /// No description provided for @defaultChargesHint.
-  ///
-  /// In en, this message translates to:
-  /// **'New contracts start with these charges. Each room can still change them.'**
-  String get defaultChargesHint;
-
   /// No description provided for @noCharges.
   ///
   /// In en, this message translates to:
@@ -967,6 +949,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This person will be removed from the list.'**
   String get deletePersonBody;
+
+  /// No description provided for @quickPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick pick'**
+  String get quickPick;
+
+  /// No description provided for @presetElectricity.
+  ///
+  /// In en, this message translates to:
+  /// **'Electricity'**
+  String get presetElectricity;
+
+  /// No description provided for @presetWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get presetWater;
+
+  /// No description provided for @presetInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wifi'**
+  String get presetInternet;
+
+  /// No description provided for @presetTrash.
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get presetTrash;
+
+  /// No description provided for @presetParking.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking'**
+  String get presetParking;
+
+  /// No description provided for @templatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rental templates'**
+  String get templatesTitle;
+
+  /// No description provided for @templatesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the usual rent, deposit and charges once, then fill the rent-out form for a new tenant in one tap.'**
+  String get templatesHint;
+
+  /// No description provided for @noTemplates.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates yet. Add one here, or tap \"Save as template\" when renting out.'**
+  String get noTemplates;
+
+  /// No description provided for @templateDefaultBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get templateDefaultBadge;
+
+  /// No description provided for @addTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Add template'**
+  String get addTemplate;
+
+  /// No description provided for @editTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit template'**
+  String get editTemplate;
+
+  /// No description provided for @templateUnnamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Default template'**
+  String get templateUnnamed;
+
+  /// No description provided for @templateRoomPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Room\'s own price'**
+  String get templateRoomPrice;
+
+  /// No description provided for @chargeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{no extra charges} =1{1 extra charge} other{{count} extra charges}}'**
+  String chargeCount(int count);
+
+  /// No description provided for @deleteTemplateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this template?'**
+  String get deleteTemplateTitle;
+
+  /// No description provided for @deleteTemplateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Contracts already made from it stay the same.'**
+  String get deleteTemplateBody;
+
+  /// No description provided for @templateNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Template name'**
+  String get templateNameLabel;
+
+  /// No description provided for @templateNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard room'**
+  String get templateNameHint;
+
+  /// No description provided for @templateRentHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave empty to use each room\'s own price.'**
+  String get templateRentHelper;
+
+  /// No description provided for @templateIsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default template'**
+  String get templateIsDefault;
+
+  /// No description provided for @templateIsDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Filled in automatically when you rent out a room.'**
+  String get templateIsDefaultHint;
+
+  /// No description provided for @useTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Use template'**
+  String get useTemplate;
+
+  /// No description provided for @saveAsTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as template'**
+  String get saveAsTemplate;
+
+  /// No description provided for @templateSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved template \"{name}\"'**
+  String templateSaved(String name);
 }
 
 class _AppLocalizationsDelegate

@@ -90,61 +90,24 @@ class BookRepository {
     );
   }
 
-  /// Saves the rental defaults of a book and replaces its default extra
-  /// charges with [charges], in one transaction.
+  /// Saves the settings shared by every contract of a rental book.
+  /// Prices and extra charges live in rental templates.
   Future<void> saveRentalSettings(
     String bookId, {
     required RentTiming rentTiming,
-    required int depositMonths,
     required int noticeDays,
-    required List<ChargeInput> charges,
   }) async {
     final db = await _database.database;
-    final now = nowMillis();
-    await db.transaction((txn) async {
-      await txn.update(
-        'books',
-        {
-          'rent_timing': rentTiming.name,
-          'deposit_months': depositMonths,
-          'notice_days': noticeDays,
-          'updated_at': now,
-        },
-        where: 'id = ?',
-        whereArgs: [bookId],
-      );
-      await txn.update(
-        'charge_templates',
-        {'deleted_at': now, 'updated_at': now},
-        where: 'book_id = ? AND contract_id IS NULL AND deleted_at IS NULL',
-        whereArgs: [bookId],
-      );
-      for (var i = 0; i < charges.length; i++) {
-        final charge = charges[i];
-        await txn.insert('charge_templates', {
-          'id': newId(),
-          'book_id': bookId,
-          'name': charge.name,
-          'calc_type': charge.calcType.dbValue,
-          'unit_price': charge.unitPrice,
-          'sort_order': i,
-          'created_at': now,
-          'updated_at': now,
-        });
-      }
-    });
-  }
-
-  /// Default extra charges of a book, copied into new contracts.
-  Future<List<ChargeTemplate>> listDefaultCharges(String bookId) async {
-    final db = await _database.database;
-    final rows = await db.query(
-      'charge_templates',
-      where: 'book_id = ? AND contract_id IS NULL AND deleted_at IS NULL',
+    await db.update(
+      'books',
+      {
+        'rent_timing': rentTiming.name,
+        'notice_days': noticeDays,
+        'updated_at': nowMillis(),
+      },
+      where: 'id = ?',
       whereArgs: [bookId],
-      orderBy: 'sort_order ASC',
     );
-    return rows.map(ChargeTemplate.fromMap).toList();
   }
 
   /// Soft-deletes the book together with its items and categories.

@@ -120,3 +120,22 @@ String rentPerCycle(
     BillingCycle.month => l10n.rentPerMonth(money),
   };
 }
+
+/// A template's name, or "Default template" for the one created
+/// automatically from older default charges.
+String templateName(AppLocalizations l10n, RentalTemplate template) {
+  return template.name.trim().isEmpty ? l10n.templateUnnamed : template.name;
+}
+
+/// e.g. "3.000.000 ₫/month · 3 charges" or "Room price · 2 charges".
+String templateSummary(
+  AppLocalizations l10n,
+  RentalTemplate template,
+  String currency,
+) {
+  final rent = template.rentAmount;
+  final rentText = rent == null
+      ? l10n.templateRoomPrice
+      : rentPerCycle(l10n, rent, currency, template.cycle);
+  return '$rentText · ${l10n.chargeCount(template.charges.length)}';
+}

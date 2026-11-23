@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 /// type, borrowed from the Chuvachi website. Colour is used only to show
 /// the state of money (overdue, due today, profit).
 abstract final class AppTheme {
-  static const String bodyFont = 'BeVietnamPro';
+  /// Null = the platform's own font (Segoe UI on Windows, Roboto on
+  /// Android), which reads well with Vietnamese accents.
+  static const String? bodyFont = null;
   static const String displayFont = 'Anton';
 
   /// Wide windows (desktop, tablet in landscape) get top tabs and

@@ -14,3 +14,4 @@ String formatArea(double value) {
       ? value.toInt().toString()
       : value.toString();
 }
+
